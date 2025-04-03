@@ -39,9 +39,9 @@ done < $DATA_DIR/preprocessed.txt
 echo "Unzipping large files"
 for chr in {1..22}
 do 
-  gunzip 1KG+HGDP.chr${chr}.hapmap.final.recode.vcf
-  gunzip 1KG+HGDP.chr${chr}.hapmap.h1
-  gunzip 1KG+HGDP.chr${chr}.hapmap.h2
+  gunzip "1KG+HGDP.chr${chr}.hapmap.final.recode.vcf"
+  gunzip "1KG+HGDP.chr${chr}.hapmap.h1"
+  gunzip "1KG+HGDP.chr${chr}.hapmap.h2"
 done
 
 echo "Fetching of preprocessed data completed."

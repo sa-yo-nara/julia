@@ -4,12 +4,10 @@
 
 global_parameters:
   random_seed: 123
-  chromosome: 21 # "all" or a number from 1 to 22
-  superpopulation: "EUR" # "none" or a specific superpopulation (AFR, AMR, EAS, EUR, CSA, MID)
-  memory: 30000 # amount of memory available (in MB) for memory-intensive commands
+  chromosome: 1 # "all" or a number from 1 to 22
+  superpopulation: none # "none" or a specific superpopulation (AFR, AMR, EAS, EUR, CSA, MID)
+  memory: 8000 # amount of memory available (in MB) for memory-intensive commands
   batchsize: 10000 # batchsize for writing plink output during genotype generation
-
-
 
 
 ####################################
@@ -20,9 +18,9 @@ global_parameters:
 # - the superpopulation can be given as a wildcard by specifying {superpopulation} in the filepath
 filepaths:
   general:
-    output_dir: data/outputs/TEST-21
-    output_prefix: TEST-{chromosome}
-    genotype:
+    output_dir: data/outputs/test
+    output_prefix: test_chr-{chromosome}
+  genotype:
     vcf_input_raw: data/inputs/raw/1KG+HGDP/1KG+HGDP.chr{chromosome}.hapmap.final.vcf.gz
     vcf_input_processed: data/inputs/processed/1KG+HGDP/1KG+HGDP.chr{chromosome}.hapmap.final.recode.vcf
     vcf_metadata: data/inputs/processed/1KG+HGDP/1KG+HGDP.chr{chromosome}.metadata
@@ -38,7 +36,7 @@ filepaths:
     hap1_matrix: data/inputs/processed/1KG+HGDP/1KG+HGDP.chr{chromosome}.hapmap.h1
     hap2_matrix: data/inputs/processed/1KG+HGDP/1KG+HGDP.chr{chromosome}.hapmap.h2
   phenotype:
-    causal_list: data/inputs/processed/1KG+HGDP/Test.CausalList 
+    causal_list: data/inputs/processed/1KG+HGDP/Test.CausalList
     reference: data/inputs/processed/1KG+HGDP/Africa.Annot
     plink_override: none # can set to a value if using pre-simulated genetics input
   software:
@@ -55,12 +53,11 @@ filepaths:
 ####################################
 
 genotype_data:
-  filetype: plink  # specify either `plink` or `vcf`
   samples:
     use_default: true # setting this to true will ignore the custom population groups
     custom: # add your custom population groups below if using use_default=false
       - id: EUR_pop
-        nsamples: 20
+        nsamples: 100
         populations: 
           - EUR: 100
       - id: AFR_pop
@@ -73,7 +70,7 @@ genotype_data:
           - EUR: 50
           - AFR: 50
     default:
-      nsamples: 100 # used by the algorithm if use_default=true, otherwise custom population groups are used
+      nsamples: 1000 # used by the algorithm if use_default=true, otherwise custom population groups are used
   # recombination rate 
   rho:
     AFR: 0.77
@@ -97,20 +94,20 @@ genotype_data:
 ####################################
 
 phenotype_data:
-  nPopulation: 1
+  nPopulation: 6
   nTrait: 1
   a: -0.4
   b: -1
   c: 0.5
   nComponent: 1
-  PropotionGeno: 0.1
-  PropotionCovar: 0
-  Prevalence: 0.5
+  PropotionGeno: 0.1,0.1,0.1,0.1,0.1,0.1
+  PropotionCovar: 0,0,0,0,0,0
+  Prevalence: 0.5,0.5,0.5,0.5,0.5,0.5
   TraitCorr: 1
-  PopulationCorr: 0
+  PopulationCorr: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
   CompWeight: 1,5,10
   Causality:
-      UseCausalList: true # if true the algorithm will use the causal_list filepath
+      UseCausalList: false # if true the algorithm will use the causal_list filepath
       Polygenicity: 0.005 # only required if UseCausalList is false
       Pleiotropy: 1 # only required if UseCausalList is false
 
@@ -118,15 +115,16 @@ phenotype_data:
 ####################################
 # EVALUATION                       #
 ####################################
+
 # Set to true if you want the script to calculate the metric
 evaluation:
   metrics:
-    aats: false  # nearest neighbour adversarial accuracy
-    kinship: false # relatedness, including kinship density and IBS plots
+    aats: true  # nearest neighbour adversarial accuracy
+    kinship: true # relatedness, including kinship density and IBS plots
     ld_corr: true # linkage disequilibrium (LD) correlation matrix
     ld_decay: true # linkage disequilibrium (LD) decay plot (and distance)
-    maf: false # minor allele frequency divergences
-    pca: false # principal components analysis
+    maf: true # minor allele frequency divergences
+    pca: true # principal components analysis
     gwas: false # GWAS, manhattan plot and qqplot
 
 
@@ -162,4 +160,3 @@ optimisation:
   summary_statistics:
     ld_decay: true
     kinship: true
-
